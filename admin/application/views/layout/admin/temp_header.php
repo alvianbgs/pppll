@@ -128,7 +128,7 @@
           <?php if ($this->session->userdata('foto_user') == NULL) { ?>
                 <img src="<?php echo base_url('assets/admin/img/a.png') ?>" alt="User Image" class="user-image img-circle elevation-2">
             <?php
-            }else { ?>
+            }else { ?> 
                 <img src="<?php echo base_url('upload/foto_profile/'.$row->foto_user) ?>" alt="User Image" class="user-image img-circle elevation-2">
             <?php } ?>
           <!-- <img src="<?php echo base_url('assets/img/user2-160x160.jpg')?>"  class="user-image img-circle elevation-2" alt="User Image"> -->
