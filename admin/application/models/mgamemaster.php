@@ -5,7 +5,7 @@ class Mgamemaster extends CI_Model {
 
 	function getUser() // List User
 	{ 
-		$this->db->select('*');
+		$this->db->select('*'); 
         $this->db->from('user');
         $this->db->where('role_user','Game Master');
         $this->db->order_by('nama_user','ASC');
@@ -40,6 +40,20 @@ class Mgamemaster extends CI_Model {
 	function deleteUser_gm($id_user)
     {
         $this->db->delete('user', array('id_user' => $id_user));
+    }
+
+    function aktifgm($id_user) 
+    {
+        $status['status_user']='Aktif';
+        $this->db->where('id_user',$id_user);
+        $this->db->update('user', $status);
+    }
+
+    function nonaktifgm($id_user)
+    {
+        $status['status_user']='Nonaktif';
+        $this->db->where('id_user',$id_user);
+        $this->db->update('user', $status);
     }
 			
 }

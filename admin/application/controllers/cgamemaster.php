@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class cgamemaster extends CI_Controller {
-	
+	 
 	public function __construct()
 	{
 		parent::__construct();
@@ -18,7 +18,7 @@ class cgamemaster extends CI_Controller {
 
 	public function detgm($id_user)
     {
-        $data['detail'] = $this->Mgamemaster->det_user($id_user);
+        $data['detail'] = $this->Mgamemaster->det_user($this->encrypt->decode($id_user));
 
         $this->template->load('admin', 'content' , 'game_master/det_gm', $data);
     }
@@ -45,6 +45,7 @@ class cgamemaster extends CI_Controller {
         }
         else
         {       
+            $this->id = uniqid();
             $data['nama_user']		= $this->input->post('nama_user');
 			$data['jk_user']		= $this->input->post('jk_user');
 			$data['alamat_user']	= $this->input->post('alamat_user');
@@ -52,13 +53,29 @@ class cgamemaster extends CI_Controller {
 			$data['email_user']		= $this->input->post('email_user');
             $data['role_user']      = 'Game Master';
 
-			// echo "<pre>";
-			// print_r($data);
-			// echo "<pre>";
-			// exit();
-
             $id_user = $this->Mgamemaster->insert_gm($data);
-        	$this->detgm($id_user);
+
+            $config['upload_path']          = '../upload/foto_profile/';
+            $config['allowed_types']        = 'jpg|jpeg|png';
+            $config['file_name']            = $this->id.'-'.$id_user.'-'.$this->input->post('nama_user');
+            // $config['encrypt_name']      = true;
+            $config['overwrite']            = true;
+            $config['max_size']             = 2048; // 1MB
+            // $config['max_width']            = 1024;
+            // $config['max_height']           = 768;
+
+            $this->load->library('upload', $config);
+
+            if (!empty($_FILES["foto_user"]["name"])) {
+              if ($this->upload->do_upload('foto_user')) {
+                $data1['foto_user'] = $this->upload->data('file_name');
+                }
+            } else {
+              $data1['foto_user'] = $this->input->post('old_foto');
+            }
+
+            $this->Mgamemaster->update_gm($data1, $id_user);
+        	$this->detgm($this->encrypt->encode($id_user));
         }
 
     }
@@ -75,36 +92,67 @@ class cgamemaster extends CI_Controller {
 
         if ($this->form_validation->run() == FALSE)
         {    
-    		$data['edit']=$this->Mgamemaster->det_user($id_user);
-
-            // echo "<pre>";
-            // print_r($data);
-            // echo "<pre>";
-            // exit();
+    		$data['edit']=$this->Mgamemaster->det_user($this->encrypt->decode($id_user));
+            $data['id_user'] = $id_user;
             $this->template->load('admin', 'content' , 'game_master/update_gm',$data);
         }
         else
         {       
+            $this->id = uniqid();
             $data['nama_user']		= $this->input->post('nama_user');
 			$data['jk_user']		= $this->input->post('jk_user');
 			$data['alamat_user']	= $this->input->post('alamat_user');
 			$data['telp_user']		= $this->input->post('telp_user');
 			$data['email_user']		= $this->input->post('email_user');
 
-			// echo "<pre>";
-			// print_r($data);
-			// echo "<pre>";
-			// exit();
+            $config['upload_path']          = '../upload/foto_profile/';
+            $config['allowed_types']        = 'jpg|jpeg|png';
+            $config['file_name']            = $this->id.'-'.$this->encrypt->decode($id_user).'-'.$this->input->post('nama_user');
+            // $config['encrypt_name']      = true;
+            $config['overwrite']            = true;
+            $config['max_size']             = 2048; // 1MB
+            // $config['max_width']            = 1024;
+            // $config['max_height']           = 768;
 
-            $this->Mgamemaster->update_gm($data, $id_user);
+            $this->load->library('upload', $config);
+
+            if (!empty($_FILES["foto_user"]["name"])) {
+              if ($this->upload->do_upload('foto_user')) {
+                $data['foto_user'] = $this->upload->data('file_name');
+                }
+            } else {
+              $data['foto_user'] = $this->input->post('old_foto');
+            }
+
+            $this->Mgamemaster->update_gm($data, $this->encrypt->decode($id_user));
         	$this->detgm($id_user);
         }
     }
 
     public function deletegm($id_user)
     {
-        $this->Mgamemaster->deleteUser_gm($id_user);
-        $this->index();
+        $this->Mgamemaster->deleteUser_gm($this->encrypt->decode($id_user));
+        redirect("admin/cgamemaster","refresh");
+    }
+
+    function aktif($id_user)
+    { 
+        // echo "<pre>";
+        // print_r($this->encrypt->decode($id_user));
+        // echo "<pre>";
+        // exit();
+        $this->Mgamemaster->aktifgm($this->encrypt->decode($id_user));
+        redirect("admin/cgamemaster","refresh");       
+    }
+
+    function nonaktif($id_user)
+    {
+        // echo "<pre>";
+        // print_r($this->encrypt->decode($id_user));
+        // echo "<pre>";
+        // exit();
+        $this->Mgamemaster->nonaktifgm($this->encrypt->decode($id_user));
+        redirect("admin/cgamemaster","refresh");       
     }
     
 		

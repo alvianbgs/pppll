@@ -2,7 +2,7 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-12"> 
 
             <!-- Profile Image -->
             <div class="card card-primary">
@@ -13,10 +13,10 @@
                 <?php foreach ($detail->result_array() as $row) { ?>
                 <div class="text-center">
                   <?php if ($row['foto_user'] == NULL) { ?>
-                      <img src="<?php echo base_url('assets/admin/img/a.png') ?>" alt="User profile picture" class="profile-user-img img-fluid img-circle">
+                      <img id="output1" src="<?php echo base_url('assets/admin/img/a.png') ?>" alt="User profile picture" class="profile-user-img img-fluid img-circle" style="width: 150px;height: 150px;">
                   <?php
                   }else { ?> 
-                      <img src="<?php echo base_url('upload/foto_profile/'.$row->foto_user) ?>" alt="User profile picture" class="profile-user-img img-fluid img-circle">
+                      <img id="output1" src="<?php echo base_url('upload/foto_profile/'.$row['foto_user']) ?>" alt="User profile picture" class="profile-user-img img-fluid img-circle" style="width: 150px;height: 150px;">
                   <?php } ?>
                 </div>
 
