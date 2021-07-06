@@ -29,6 +29,7 @@ class Simple_login {
 			$this->CI->session->set_userdata('foto_user', $foto);
 			$this->CI->session->set_userdata('id_login', uniqid(rand()));
 			$this->CI->session->set_userdata('id_user', $id);
+			
 			redirect(base_url('/admin')); 
 		}
 		else if($user->num_rows()==1)
